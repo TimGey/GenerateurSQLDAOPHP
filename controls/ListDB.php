@@ -16,10 +16,12 @@ function formToSession($pServeur, $pPort, $pUt, $pMDP) {
 }
 
 function generateList($pPdo) {
+    
     $tDBName = getBDsFromServeur($pPdo);
     $lsDBName = "";
     foreach ($tDBName as $value){
-        $lsDBName .= "<li><a href=''>$value</a></li>\n";
+        if ($value!="information_schema"&&$value!="mysql"&&$value!="performance_schema"&&$value!="sys")
+        $lsDBName .= "<li><a href='ListColonnes.php?tableName=$value'>$value</a></li>\n";
     }
     return $lsDBName;
 }
