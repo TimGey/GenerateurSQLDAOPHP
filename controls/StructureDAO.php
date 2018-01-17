@@ -50,19 +50,18 @@ class StructureDAO {
         
     }
 
-    public function deleteNomDeTable() {
+    public function deleteNomDeTable($pPK) {
         try {
-
-
-            $strdelete = "DELETE FROM cours.villes WHERE cp= ?";
-
+            $iAffect = 0;
+            $strdelete = "DELETE FROM NomDeTable WHERE PK= ?";
             $lrs = $lcnx->prepare($strdelete);
-            $lrs->execute(array($pcp));
+            $lrs->execute(array($pFK));
+            $iAffect = $lrs->rowcount();
         } catch (Exception $ex) {
-            
+            $iAffect = -1;
         }
 
-        return $lrs->rowCount();
+        return $iAffect;
     }
 
 }

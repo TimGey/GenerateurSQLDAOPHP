@@ -28,7 +28,7 @@
                 <?php
                 $cnx;
                 require_once 'controls/listDB.php';
-                $NAme = filter_input(INPUT_GET, "tableName");
+                $NAme = filter_input(INPUT_GET, "dbName");
 
                 if ($NAme != null) {
 
@@ -46,11 +46,6 @@
                 }
 
                 $btConnexion = filter_input(INPUT_POST, "btConnexion");
-//                $btConnexion = filter_input(INPUT_POST, "btConnexion");
-//                $pServeur = filter_input(INPUT_POST, "serveur");
-//                $pPort = filter_input(INPUT_POST, "port");
-//                $pUt = filter_input(INPUT_POST, "username");
-//                $pMDP = filter_input(INPUT_POST, "mdp");
 
 
                 if ($btConnexion != null || $NAme != null) {
@@ -62,9 +57,8 @@
                     } else {
                         echo "KO";
                     }
-                          print $lsContenu;
+                    print $lsContenu;
                 }
-          
                 ?>
             </ul>
         </div>
