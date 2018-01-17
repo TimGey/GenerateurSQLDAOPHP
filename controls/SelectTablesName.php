@@ -8,7 +8,7 @@ $Serveur = $_SESSION["serveur"];
 $Port = $_SESSION["port"];
 $Ut = $_SESSION["ut"];
 $MDP = $_SESSION["mdp"];
-$dbNAme = filter_input(INPUT_GET, "tableName");
+$dbNAme = filter_input(INPUT_GET, "dbName");
 
 $cnx = seConnecter($Serveur, $Port, $Ut, $MDP, $dbNAme);
 

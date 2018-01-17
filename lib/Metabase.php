@@ -101,7 +101,7 @@ function getColumnsNamesFKFromTable($pcnx, $psBD, $psTable) {
  * @return type
  */
 function getColumnsNamesNullableFromTable(PDO $pcnx, $psBD, $psTable) {
-    $lsSelect = "SELECT COLUMN_NAME FROM information_schema.columns WHERE TABLE_SCHEMA='$psBD' AND TABLE_NAME='$psTable' AND IS_NULLABLE='YES'";
+    $lsSelect = "SELECT COLUMN_NAME FROM information_schema.columns WHERE TABLE_SCHEMA='$psBD' AND TABLE_NAME='$psTable' AND IS_NULLABLE='NO'";
     return getTableau1DFromSelect($pcnx, $lsSelect);
 }
 
