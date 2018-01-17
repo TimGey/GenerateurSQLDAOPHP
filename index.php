@@ -28,27 +28,58 @@
                 <?php
                 $cnx;
                 require_once 'controls/listDB.php';
-                
+                $NAme = filter_input(INPUT_GET, "tableName");
+
+                if ($NAme != null) {
+
+                    $pServeur = $_SESSION["serveur"];
+                    $pPort = $_SESSION["port"];
+                    $pUt = $_SESSION["ut"];
+                    $pMDP = $_SESSION["mdp"];
+                } else {
+
+
+                    $pServeur = filter_input(INPUT_POST, "serveur");
+                    $pPort = filter_input(INPUT_POST, "port");
+                    $pUt = filter_input(INPUT_POST, "username");
+                    $pMDP = filter_input(INPUT_POST, "mdp");
+                }
+
                 $btConnexion = filter_input(INPUT_POST, "btConnexion");
-                $pServeur = filter_input(INPUT_POST, "serveur");
-                $pPort = filter_input(INPUT_POST, "port");
-                $pUt = filter_input(INPUT_POST, "username");
-                $pMDP = filter_input(INPUT_POST, "mdp");
+//                $btConnexion = filter_input(INPUT_POST, "btConnexion");
+//                $pServeur = filter_input(INPUT_POST, "serveur");
+//                $pPort = filter_input(INPUT_POST, "port");
+//                $pUt = filter_input(INPUT_POST, "username");
+//                $pMDP = filter_input(INPUT_POST, "mdp");
 
-                if ($btConnexion != null) {
-                    $cnx = formToSession($pServeur, $pPort, $pUt, $pMDP , "");
 
-                    if ($cnx != null){
+                if ($btConnexion != null || $NAme != null) {
+
+                    $cnx = formToSession($pServeur, $pPort, $pUt, $pMDP, "");
+
+                    if ($cnx != null) {
                         $lsContenu = generateList($cnx);
                     } else {
                         echo "KO";
                     }
-                    
-
-                    print $lsContenu;
+                          print $lsContenu;
                 }
+          
                 ?>
             </ul>
+        </div>
+        <div>
+            <?php
+            require_once './controls/SelectTablesName.php';
+            ?>
+            <?php
+            if ($dbNAme != null) {
+                $tNameTables = getTablesFromBD($cnx, $dbNAme);
+                $lscontenu = tableau2Select($tNameTables);
+
+                print $lscontenu;
+            }
+            ?>
         </div>
     </body>
 </html>

@@ -21,7 +21,7 @@ function generateList($pPdo) {
     $lsDBName = "";
     foreach ($tDBName as $value){
         if ($value!="information_schema"&&$value!="mysql"&&$value!="performance_schema"&&$value!="sys"&&$value!="cdcol"&&$value!="phpmyadmin"&&$value!="test")
-        $lsDBName .= "<li><a href='ListTables.php?tableName=$value'>$value</a></li>\n";
+        $lsDBName .= "<li><a href='index.php?tableName=$value'>$value</a></li>\n";
     }
     return $lsDBName;
 }

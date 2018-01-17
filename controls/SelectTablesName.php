@@ -1,7 +1,7 @@
 <?php
 require_once 'lib/Metabase.php';
 require_once 'lib/Connexion.php';
-session_start();
+//session_start();
 
 //$variable = $_SESSION["variable"];
 $Serveur = $_SESSION["serveur"];
