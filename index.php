@@ -48,6 +48,7 @@
                 $btConnexion = filter_input(INPUT_POST, "btConnexion");
 
 
+
                 if ($btConnexion != null || $NAme != null) {
 
                     $cnx = formToSession($pServeur, $pPort, $pUt, $pMDP, "");
