@@ -20,7 +20,7 @@ function generateList($pPdo) {
     $tDBName = getBDsFromServeur($pPdo);
     $lsDBName = "";
     foreach ($tDBName as $value){
-        if ($value!="information_schema"&&$value!="mysql"&&$value!="performance_schema"&&$value!="sys")
+        if ($value!="information_schema"&&$value!="mysql"&&$value!="performance_schema"&&$value!="sys"&&$value!="cdcol"&&$value!="phpmyadmin"&&$value!="test")
         $lsDBName .= "<li><a href='ListColonnes.php?tableName=$value'>$value</a></li>\n";
     }
     return $lsDBName;
