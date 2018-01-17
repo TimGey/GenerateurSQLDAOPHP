@@ -63,17 +63,20 @@
             </ul>
         </div>
         <div>
-            <?php
-            require_once './controls/SelectTablesName.php';
-            ?>
-            <?php
-            if ($dbNAme != null) {
-                $tNameTables = getTablesFromBD($cnx, $dbNAme);
-                $lscontenu = tableau2Select($tNameTables);
+            <form method="get">
+                <?php
+                require_once './controls/SelectTablesName.php';
+                ?>
+                <?php
+                if ($dbNAme != null) {
+                    $tNameTables = getTablesFromBD($cnx, $dbNAme);
+                    $lscontenu = tableau2Select($tNameTables,$dbNAme);
 
-                print $lscontenu;
-            }
-            ?>
+                    print $lscontenu;
+                }
+                ?>
+                <button type="submit" value="1" name="btGenerate">Générer DAO</button>
+            </form>
         </div>
     </body>
 </html>

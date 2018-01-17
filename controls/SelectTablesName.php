@@ -14,13 +14,15 @@ $cnx = seConnecter($Serveur, $Port, $Ut, $MDP, $dbNAme);
 
 
 
-function tableau2Select($pTableau) {
+function tableau2Select($pTableau , $pdbName) {
     $lsContenu = "<select name='select'>\n";
     foreach ($pTableau as $value) {
         
         $lsContenu.="<option value=$value>$value</option>\n";
     }
-    $lsContenu.="</select>";
+    $lsContenu.="</select>\n";
+    $lsContenu.="<input type='hidden' name='dbName' value='$pdbName'></input>\n";
+    
 
     return $lsContenu;
 }
