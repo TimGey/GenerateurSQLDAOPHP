@@ -17,6 +17,7 @@ $cnx = seConnecter($Serveur, $Port, $Ut, $MDP, $dbNAme);
 function tableau2Select($pTableau) {
     $lsContenu = "<select name='select'>\n";
     foreach ($pTableau as $value) {
+        
         $lsContenu.="<option value=$value>$value</option>\n";
     }
     $lsContenu.="</select>";
