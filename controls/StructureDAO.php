@@ -15,25 +15,54 @@ class StructureDAO {
         $this->cnx = $pcnx;
     }
 
-    public function selectALL() {
-        $querySQL = "SELECT * FROM table ";
-        $lrs = $this->_cnx->query($querySQL);
+    public function selectALLNomDeTable() {
+        try {
+            $querySQL = "SELECT * FROM table ";
+            $lrs = $this->_cnx->query($querySQL);
+            $lrs->setFetchMode(PDO::FETCH_ASSOC);
+            $List = $lrs->fetchAll();
+        } catch (PDOException $exc) {
+            $List = null; //ecrire la condition
+        }
+
+        return $List;
     }
 
-    public function selectOne() {
+    public function selectOneNomDeTable($pPK) {
+        try {
+            $querySQL = "SELECT * FROM table WHERE nomDePK =?";
+            $lrs = $lcnx->prepare($querySQL);
+            $lrs->execute(array($pPK));
+            $lrs->setFetchMode(PDO::FETCH_ASSOC);
+            $tObjet = $lrs->fetch();
+        } catch (PDOException $exc) {
+            $tObjet = null; //ecrire la condition
+        }
+
+        return $tObjet;
+    }
+
+    public function insertNomDeTable() {
         
     }
 
-    public function insert() {
+    public function updateNomDeTable() {
         
     }
 
-    public function update() {
-        
-    }
+    public function deleteNomDeTable() {
+        try {
 
-    public function delete() {
-        
+
+            $strdelete = "DELETE FROM cours.villes WHERE cp= ?";
+
+            $lrs = $lcnx->prepare($strdelete);
+            $lrs->execute(array($pcp));
+        } catch (Exception $ex) {
+            
+        }
+
+        return $lrs->rowCount();
     }
 
 }
