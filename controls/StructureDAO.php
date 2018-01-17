@@ -11,7 +11,7 @@ class StructureDAO {
 
 //put your code here
 // --- Le constructeur
-    public function _construc(PDO $pcnx) {
+    public function __construct(PDO $pcnx) {
         $this->cnx = $pcnx;
     }
 
