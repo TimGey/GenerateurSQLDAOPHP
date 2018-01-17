@@ -84,17 +84,26 @@
                  */
                 require_once 'controls/ControleurRecupColonnes.php';
                 require_once 'controls/Table2Str.php';
+                require_once 'controls/Str2FilePhp.php';
 
                 $btGenerate = filter_input(INPUT_GET, "btGenerate");
 
                 if ($btGenerate != null) {
                     $bd = filter_input(INPUT_GET, "dbName");
                     $table = filter_input(INPUT_GET, "select");
-                    $test = tableauStructureTable($cnx, $bd, $table);
+                    $tColonnes = tableauStructureTable($cnx, $bd, $table);
 
-                    $testDAO = tBD2Str($test, $table);
-                    
-                    print nl2br($testDAO) ;
+                    $strDAO = tBD2Str($tColonnes, $table);
+
+                    $int = str2FilePhp($strDAO, $table);
+
+                    if ($int) {
+                        echo "<br/>Création d'un fichier $table" . "DAO.php dans le dossier \"conf\" ";
+                    } else {
+                        echo "<br/>Création échouée";
+                    }
+
+                    //print nl2br($testDAO) ;
                 }
                 ?>
 
