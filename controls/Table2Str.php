@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 
  * @param type $ptSQLTable
@@ -7,7 +8,7 @@
  */
 function tBD2Str($ptSQLTable, $ptableName) {
 
-
+    $colonnePKName = "";
 
 
     $contenuDAO = "<?php \n";
@@ -30,31 +31,122 @@ function tBD2Str($ptSQLTable, $ptableName) {
     $contenuDAO.='}' . "\n";
 
     $contenuDAO.='return $List;' . "\n";
-    $contenuDAO.='}' . "\n";
+    $contenuDAO.='}' . "\n\n";
 
-    
+
     /**
      * select One
      */
-    $contenuDAO.="public function selectOne$ptableName(".'$pPK'.") {\n ";
+    $contenuDAO.="public function selectOne$ptableName(" . '$pPK' . ") {\n ";
     $contenuDAO.="try {\n";
     $contenuDAO.='$querySQL' . " = \"SELECT * FROM " . $ptableName . " WHERE ";
 
     foreach ($ptSQLTable as $colonne) {
         if (array_key_exists("PK", $colonne)) {
             $contenuDAO.= $colonne["nomTable"] . "=? \";\n";
+            $colonnePKName = $colonne["nomTable"];
         }
     }
     $contenuDAO.='$lrs = $this->cnx->prepare($querySQL);' . "\n";
     $contenuDAO.='$lrs->execute(array($pPK));' . "\n";
     $contenuDAO.=' $lrs->setFetchMode(PDO::FETCH_ASSOC);' . "\n";
     $contenuDAO.=' $result = $lrs->fetch();' . "\n";
-    $contenuDAO.=' } catch (PDOException $exc) {'."\n";
-    $contenuDAO.=' $result = null;'."\n";
+    $contenuDAO.=' } catch (PDOException $exc) {' . "\n";
+    $contenuDAO.=' $result = null;' . "\n";
     $contenuDAO.="} \n \n";
-    $contenuDAO.='return $result;'."\n } \n";
-    
-    
-    
+    $contenuDAO.='return $result;' . "\n } \n\n";
+
+    /**
+     * insert
+     */
+    $contenuDAO.=" public function insert" . $ptableName . "(";
+    foreach ($ptSQLTable as $colonne) {
+        if (!array_key_exists("PK", $colonne)) {
+            if (array_key_exists("nonNull", $colonne)) {
+                $contenuDAO.='$p' . $colonne["nomTable"] . ", ";
+            } else {
+                $contenuDAO.='$p' . $colonne["nomTable"] . "=null , ";
+            }
+        }
+    }
+    $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . "){\n";
+    $contenuDAO.="try {\n";
+    $contenuDAO.='$iAffect = 0;' . "\n";
+    $contenuDAO.='$querySQL' . "=\"INSERT INTO $ptableName (";
+    foreach ($ptSQLTable as $colonne) {
+        if (!array_key_exists("PK", $colonne)) {
+            $contenuDAO.=$colonne["nomTable"] . ", ";
+        }
+    }
+    $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . ") VALUES(";
+    foreach ($ptSQLTable as $colonne) {
+        if (!array_key_exists("PK", $colonne)) {
+            $contenuDAO.="?, ";
+        }
+    }
+    $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . ")\";\n";
+    $contenuDAO.='$lrs = $this->cnx->prepare($querySQL);' . "\n";
+    $contenuDAO.='$lrs->execute(array(';
+    foreach ($ptSQLTable as $colonne) {
+        if (!array_key_exists("PK", $colonne)) {
+            $contenuDAO.='$p' . $colonne["nomTable"] . ", ";
+        }
+    }
+    $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . "));\n";
+    $contenuDAO.='$iAffect = $lrs->rowcount();' . "\n";
+    $contenuDAO.='} catch (Exception $ex) {' . "\n";
+    $contenuDAO.=' $iAffect = -1;' . "\n";
+    $contenuDAO.="}\n return " . '$iAffect' . ";\n}\n\n";
+
+    /**
+     * update
+     */
+    $contenuDAO.=" public function update" . $ptableName . "(";
+    foreach ($ptSQLTable as $colonne) {
+        if (array_key_exists("nonNull", $colonne)) {
+            $contenuDAO.='$p' . $colonne["nomTable"] . ", ";
+        } else {
+            $contenuDAO.='$p' . $colonne["nomTable"] . "=null , ";
+        }
+    }
+    $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . "){\n";
+    $contenuDAO.="try {\n";
+    $contenuDAO.='$iAffect = 0;' . "\n";
+    $contenuDAO.='$querySQL' . "=\"UPDATE $ptableName SET ";
+    foreach ($ptSQLTable as $colonne) {
+        if (!array_key_exists("PK", $colonne)) {
+            $contenuDAO.=$colonne["nomTable"] . "=?, ";
+        }
+    }
+    $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . " WHERE $colonnePKName =? \";\n";
+    $contenuDAO.='$lrs = $this->cnx->prepare($querySQL);' . " \n";
+    $contenuDAO.='$lrs->execute(array(';
+    foreach ($ptSQLTable as $colonne) {
+        if (!array_key_exists("PK", $colonne)) {
+            $contenuDAO.='$p' . $colonne["nomTable"] . ", ";
+        }
+    }
+    $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . ', $p' . $colonnePKName . " ));\n";
+    $contenuDAO.='$iAffect = $lrs->rowcount();' . "\n";
+    $contenuDAO.='} catch (Exception $ex) {' . "\n";
+    $contenuDAO.=' $iAffect = -1;' . "\n";
+    $contenuDAO.="}\n return " . '$iAffect' . ";\n}\n \n";
+
+    /**
+     * delete
+     */
+    $contenuDAO.="public function delete$ptableName(" . '$p' . $colonnePKName . ") {\n ";
+    $contenuDAO.="try {\n";
+    $contenuDAO.='$iAffect = 0;' . "\n";
+    $contenuDAO.='$querySQL' . " = \"DELETE FROM " . $ptableName . " WHERE $colonnePKName = ?\";\n";
+    $contenuDAO.='$lrs = $this->cnx->prepare($querySQL);' . "\n";
+    $contenuDAO.='$lrs->execute(array($p' . $colonnePKName . "));\n";
+    $contenuDAO.='$iAffect = $lrs->rowcount();' . "\n";
+    $contenuDAO.='} catch (Exception $ex) {' . "\n";
+    $contenuDAO.=' $iAffect = -1;' . "\n";
+    $contenuDAO.="}\n return " . '$iAffect' . ";\n}\n \n";
+    $contenuDAO.="}";
+
+
     return $contenuDAO;
 }
