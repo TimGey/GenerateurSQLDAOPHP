@@ -71,12 +71,33 @@
                 <?php
                 if ($dbNAme != null) {
                     $tNameTables = getTablesFromBD($cnx, $dbNAme);
-                    $lscontenu = tableau2Select($tNameTables,$dbNAme);
+                    $lscontenu = tableau2Select($tNameTables, $dbNAme);
 
                     print $lscontenu;
                 }
                 ?>
                 <button type="submit" value="1" name="btGenerate">Générer DAO</button>
+
+                <?php
+                /**
+                 * ici on fera l'incrémentation dans un .php
+                 */
+                require_once 'controls/ControleurRecupColonnes.php';
+                require_once 'controls/Table2Str.php';
+
+                $btGenerate = filter_input(INPUT_GET, "btGenerate");
+
+                if ($btGenerate != null) {
+                    $bd = filter_input(INPUT_GET, "dbName");
+                    $table = filter_input(INPUT_GET, "select");
+                    $test = tableauStructureTable($cnx, $bd, $table);
+
+                    $testDAO = tBD2Str($test, $table);
+                    
+                    print nl2br($testDAO) ;
+                }
+                ?>
+
             </form>
         </div>
     </body>
