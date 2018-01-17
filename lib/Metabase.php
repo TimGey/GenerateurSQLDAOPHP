@@ -93,6 +93,20 @@ function getColumnsNamesFKFromTable($pcnx, $psBD, $psTable) {
 
 /**
  * 
+ * Renvoie un tableau : la liste des colonnes non nulles
+ *
+ * @param PDO $pcnx
+ * @param type $psBD
+ * @param type $psTable
+ * @return type
+ */
+function getColumnsNamesNullableFromTable(PDO $pcnx, $psBD, $psTable) {
+    $lsSelect = "SELECT COLUMN_NAME FROM information_schema.columns WHERE TABLE_SCHEMA='$psBD' AND TABLE_NAME='$psTable' AND IS_NULLABLE='YES'";
+    return getTableau1DFromSelect($pcnx, $lsSelect);
+}
+
+/**
+ * 
  * @param type $pcnx
  * @param type $psSelect
  * @return array
@@ -114,5 +128,13 @@ function getTableau1DFromSelect($pcnx, $psSelect) {
     }
     return $t1D;
 }
+
+/*
+ * TEST
+ */
+//$lcnx = new PDO("mysql:host=localhost;port=3306", "root", "");
+//$lcnx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//$lcnx->exec("SET NAMES 'UTF8'");
+//print_r(getColumnsNamesNullableFromTable($lcnx, "cours", "clients"));
 
 ?>
