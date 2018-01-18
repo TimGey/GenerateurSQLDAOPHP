@@ -65,11 +65,11 @@
         </div>
         <div>
             <form method="get">
+
                 <?php
-                require_once './controls/SelectTablesName.php';
-                ?>
-                <?php
+                $dbNAme = filter_input(INPUT_GET, "dbName");
                 if ($dbNAme != null) {
+                    require_once 'controls/SelectTablesName.php';
                     $tNameTables = getTablesFromBD($cnx, $dbNAme);
                     $lscontenu = tableau2Select($tNameTables, $dbNAme);
 
@@ -102,8 +102,6 @@
                     } else {
                         echo "<br/>Création échouée";
                     }
-
-                    //print nl2br($testDAO) ;
                 }
                 ?>
 
