@@ -47,6 +47,7 @@ function tBD2Str($ptSQLTable, $ptableName) {
             $colonnePKName = $colonne["nomTable"];
         }
     }
+    
     $contenuDAO.='$lrs = $this->cnx->prepare($querySQL);' . "\n";
     $contenuDAO.='$lrs->execute(array($pPK));' . "\n";
     $contenuDAO.=' $lrs->setFetchMode(PDO::FETCH_ASSOC);' . "\n";
