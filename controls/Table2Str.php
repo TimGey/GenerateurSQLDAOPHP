@@ -8,7 +8,7 @@
  */
 function tBD2Str($ptSQLTable, $ptableName) {
 
-    $colonnePKName = "";
+    $colonnePKName = "// import dto à ajouté \n";
 
 
     $contenuDAO = "<?php \n";
@@ -20,24 +20,32 @@ function tBD2Str($ptSQLTable, $ptableName) {
     /**
      * select all
      */
-    $contenuDAO.= "public function selectALL" . $ptableName . "() {\n ";
+    $contenuDAO.= "public function selectALL () {\n ";
     $contenuDAO.="try {\n";
     $contenuDAO.='$querySQL =' . "\"" . 'SELECT * FROM  ' . $ptableName . "\";\n";
     $contenuDAO.='$lrs = $this->cnx->query($querySQL)' . ";\n";
     $contenuDAO.='$lrs->setFetchMode(PDO::FETCH_ASSOC)' . ";\n";
     $contenuDAO.='$List = $lrs->fetchAll()' . ";\n";
+    $contenuDAO.='$tdto = array();';
+    $contenuDAO.='foreach ($List as $ligne) {' . "\n";
+    $contenuDAO.='$dto = new' . $ptableName . '('; //$ligne["idAbonnement"], $ligne["dateAbonnement"], $ligne["duree"], $ligne["idLecteur"]);' . "\n";
+    foreach ($ptSQLTable as $colonne) {
+        $contenuDAO.='$ligne' . $colonne["nomTable"] . " ,";
+    }
+    $contenuDAO = substr($contenuDAO, 0, -2) . ") ;\n";
+    $contenuDAO.='$tdto[] = $dto; ' . "\n }";
     $contenuDAO.='} catch (PDOException $exc) {' . "\n";
-    $contenuDAO.='$List = null;' . "\n";
+    $contenuDAO.='$tdto[] = null;' . "\n";
     $contenuDAO.='}' . "\n";
 
-    $contenuDAO.='return $List;' . "\n";
+    $contenuDAO.='return $tdto;' . "\n";
     $contenuDAO.='}' . "\n\n";
 
 
     /**
      * select One
      */
-    $contenuDAO.="public function selectOne$ptableName(" . '$pPK' . ") {\n ";
+    $contenuDAO.="public function selectOne $ptableName(" . '$pPK' . ") {\n ";
     $contenuDAO.="try {\n";
     $contenuDAO.='$querySQL' . " = \"SELECT * FROM " . $ptableName . " WHERE ";
 
@@ -59,17 +67,17 @@ function tBD2Str($ptSQLTable, $ptableName) {
     /**
      * insert
      */
-    $contenuDAO.=" public function insert" . $ptableName . "(";
-    foreach ($ptSQLTable as $colonne) {
-        if (!array_key_exists("PK", $colonne)) {
-            if (array_key_exists("nonNull", $colonne)) {
-                $contenuDAO.='$p' . $colonne["nomTable"] . ", ";
-            } else {
-                $contenuDAO.='$p' . $colonne["nomTable"] . "=null , ";
-            }
-        }
-    }
-    $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . "){\n";
+    $contenuDAO.=" public function insert(" . camelConversion($ptableName) . '$p' . $ptableName . ") \n";
+//    foreach ($ptSQLTable as $colonne) {
+//        if (!array_key_exists("PK", $colonne)) {
+//            if (array_key_exists("nonNull", $colonne)) {
+//                $contenuDAO.='$p' . $colonne["nomTable"] . ", ";
+//            } else {
+//                $contenuDAO.='$p' . $colonne["nomTable"] . "=null , ";
+//            }
+//        }
+//    }
+//    $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . "){\n";
     $contenuDAO.="try {\n";
     $contenuDAO.='$iAffect = 0;' . "\n";
     $contenuDAO.='$querySQL' . "=\"INSERT INTO $ptableName (";
@@ -84,6 +92,8 @@ function tBD2Str($ptSQLTable, $ptableName) {
             $contenuDAO.="?, ";
         }
     }
+    
+    // je me suis arreté là pour l'integration du DTO dans le DAO
     $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . ")\";\n";
     $contenuDAO.='$lrs = $this->cnx->prepare($querySQL);' . "\n";
     $contenuDAO.='$lrs->execute(array(';
