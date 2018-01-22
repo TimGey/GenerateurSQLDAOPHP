@@ -21,7 +21,7 @@ return $List;
 
 public function selectOnearticle($pPK) {
  try {
-$querySQL = "SELECT * FROM article WHERE ID_article=? ";
+$querySQL = "SELECT * FROM article WHERE idArticle=? ";
 $lrs = $this->cnx->prepare($querySQL);
 $lrs->execute(array($pPK));
  $lrs->setFetchMode(PDO::FETCH_ASSOC);
@@ -33,12 +33,12 @@ $lrs->execute(array($pPK));
 return $result;
  } 
 
- public function insertarticle($pID_journaliste, $pID_film=null , $pTITRE_article, $pTEXTE_article, $pPHOTO_article=null ){
+ public function insertarticle($ptitre, $psousTitre, $ptexte, $pidEtatArticle){
 try {
 $iAffect = 0;
-$querySQL="INSERT INTO article (ID_journaliste, ID_film, TITRE_article, TEXTE_article, PHOTO_article) VALUES(?, ?, ?, ?, ?)";
+$querySQL="INSERT INTO article (titre, sousTitre, texte, idEtatArticle) VALUES(?, ?, ?, ?)";
 $lrs = $this->cnx->prepare($querySQL);
-$lrs->execute(array($pID_journaliste, $pID_film, $pTITRE_article, $pTEXTE_article, $pPHOTO_article));
+$lrs->execute(array($ptitre, $psousTitre, $ptexte, $pidEtatArticle));
 $iAffect = $lrs->rowcount();
 } catch (Exception $ex) {
  $iAffect = -1;
@@ -46,12 +46,12 @@ $iAffect = $lrs->rowcount();
  return $iAffect;
 }
 
- public function updatearticle($pID_article, $pID_journaliste, $pID_film=null , $pTITRE_article, $pTEXTE_article, $pPHOTO_article=null ){
+ public function updatearticle($pidArticle, $ptitre, $psousTitre, $ptexte, $pidEtatArticle){
 try {
 $iAffect = 0;
-$querySQL="UPDATE article SET ID_journaliste=?, ID_film=?, TITRE_article=?, TEXTE_article=?, PHOTO_article=? WHERE ID_article =? ";
+$querySQL="UPDATE article SET titre=?, sousTitre=?, texte=?, idEtatArticle=? WHERE idArticle =? ";
 $lrs = $this->cnx->prepare($querySQL); 
-$lrs->execute(array($pID_journaliste, $pID_film, $pTITRE_article, $pTEXTE_article, $pPHOTO_article, $pID_article ));
+$lrs->execute(array($ptitre, $psousTitre, $ptexte, $pidEtatArticle, $pidArticle ));
 $iAffect = $lrs->rowcount();
 } catch (Exception $ex) {
  $iAffect = -1;
@@ -59,12 +59,12 @@ $iAffect = $lrs->rowcount();
  return $iAffect;
 }
  
-public function deletearticle($pID_article) {
+public function deletearticle($pidArticle) {
  try {
 $iAffect = 0;
-$querySQL = "DELETE FROM article WHERE ID_article = ?";
+$querySQL = "DELETE FROM article WHERE idArticle = ?";
 $lrs = $this->cnx->prepare($querySQL);
-$lrs->execute(array($pID_article));
+$lrs->execute(array($pidArticle));
 $iAffect = $lrs->rowcount();
 } catch (Exception $ex) {
  $iAffect = -1;
