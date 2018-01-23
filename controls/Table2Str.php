@@ -72,16 +72,7 @@ function tBD2Str($ptSQLTable, $ptableName) {
      * insert
      */
     $contenuDAO.=" public function insert(" . StringConversion::camelConversion($ptableName) . '$p' . StringConversion::camelConversion($ptableName) . ") {\n";
-//    foreach ($ptSQLTable as $colonne) {
-//        if (!array_key_exists("PK", $colonne)) {
-//            if (array_key_exists("nonNull", $colonne)) {
-//                $contenuDAO.='$p' . $colonne["nomTable"] . ", ";
-//            } else {
-//                $contenuDAO.='$p' . $colonne["nomTable"] . "=null , ";
-//            }
-//        }
-//    }
-//    $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . "){\n";
+
     $contenuDAO.="try {\n";
     $contenuDAO.='$iAffect = 0;' . "\n";
     $contenuDAO.='$querySQL' . "=\"INSERT INTO $ptableName (";
@@ -97,7 +88,7 @@ function tBD2Str($ptSQLTable, $ptableName) {
         }
     }
 
-    // je me suis arreté là pour l'integration du DTO dans le DAO
+
     $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . ")\";\n";
     $contenuDAO.='$lrs = $this->cnx->prepare($querySQL);' . "\n";
     $contenuDAO.='$lrs->execute(array(';
@@ -116,14 +107,6 @@ function tBD2Str($ptSQLTable, $ptableName) {
      * update
      */
     $contenuDAO.=" public function update(" . StringConversion::camelConversion($ptableName) . ' $p' . StringConversion::camelConversion($ptableName) . ") {";
-//    foreach ($ptSQLTable as $colonne) {
-//        if (array_key_exists("nonNull", $colonne)) {
-//            $contenuDAO.='$p' . $colonne["nomTable"] . ", ";
-//        } else {
-//            $contenuDAO.='$p' . $colonne["nomTable"] . "=null , ";
-//        }
-//    }
-//    $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . "){\n";
     $contenuDAO.="try {\n";
     $contenuDAO.='$iAffect = 0;' . "\n";
     $contenuDAO.='$querySQL' . "=\"UPDATE $ptableName SET ";
@@ -137,7 +120,7 @@ function tBD2Str($ptSQLTable, $ptableName) {
     $contenuDAO.='$lrs->execute(array(';
     foreach ($ptSQLTable as $colonne) {
         if (!array_key_exists("PK", $colonne)) {
-            $contenuDAO.= '$p' .StringConversion::camelConversion($ptableName) . "->" . StringConversion::camelConversion("get".$colonne["nomTable"]) . "(), "; // $contenuDAO.='$p' . $colonne["nomTable"] . ", ";
+            $contenuDAO.= '$p' . StringConversion::camelConversion($ptableName) . "->" . StringConversion::camelConversion("get" . $colonne["nomTable"]) . "(), "; // $contenuDAO.='$p' . $colonne["nomTable"] . ", ";
         }
     }
     $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . ', $p' . StringConversion::camelConversion($colonnePKName) . " ));\n";
