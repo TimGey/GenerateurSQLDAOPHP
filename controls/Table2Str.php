@@ -1,5 +1,7 @@
 <?php
 
+require_once './controls/StringConversion.php';
+
 /**
  * 
  * @param type $ptSQLTable
@@ -8,11 +10,13 @@
  */
 function tBD2Str($ptSQLTable, $ptableName) {
 
-    $colonnePKName = "// import dto à ajouté \n";
 
 
-    $contenuDAO = "<?php \n";
-    $contenuDAO.= " \nclass " . $ptableName . "DAO {\n \n " . '  private $cnx' . ";\n";
+    $colonnePKName = "";
+
+    $contenuDAO = "// import dto à ajouté \n";
+    $contenuDAO .= "<?php \n";
+    $contenuDAO.= " \nclass " . StringConversion::camelConversion($ptableName) . "DAO {\n \n " . '  private $cnx' . ";\n";
     $contenuDAO.='public function __construct(PDO $pcnx) {' . "\n";
     $contenuDAO.= '$this->cnx = $pcnx;' . "\n";
     $contenuDAO.="}\n \n ";
@@ -30,7 +34,7 @@ function tBD2Str($ptSQLTable, $ptableName) {
     $contenuDAO.='foreach ($List as $ligne) {' . "\n";
     $contenuDAO.='$dto = new' . $ptableName . '('; //$ligne["idAbonnement"], $ligne["dateAbonnement"], $ligne["duree"], $ligne["idLecteur"]);' . "\n";
     foreach ($ptSQLTable as $colonne) {
-        $contenuDAO.='$ligne' . $colonne["nomTable"] . " ,";
+        $contenuDAO.='$ligne [' . "\"" . $colonne["nomTable"] . "\"] ,";
     }
     $contenuDAO = substr($contenuDAO, 0, -2) . ") ;\n";
     $contenuDAO.='$tdto[] = $dto; ' . "\n }";
@@ -45,7 +49,7 @@ function tBD2Str($ptSQLTable, $ptableName) {
     /**
      * select One
      */
-    $contenuDAO.="public function selectOne $ptableName(" . '$pPK' . ") {\n ";
+    $contenuDAO.="public function selectOne(" . '$pPK' . ") {\n ";
     $contenuDAO.="try {\n";
     $contenuDAO.='$querySQL' . " = \"SELECT * FROM " . $ptableName . " WHERE ";
 
@@ -67,7 +71,7 @@ function tBD2Str($ptSQLTable, $ptableName) {
     /**
      * insert
      */
-    $contenuDAO.=" public function insert(" . camelConversion($ptableName) . '$p' . $ptableName . ") \n";
+    $contenuDAO.=" public function insert(" . StringConversion::camelConversion($ptableName) . '$p' . StringConversion::camelConversion($ptableName) . ") {\n";
 //    foreach ($ptSQLTable as $colonne) {
 //        if (!array_key_exists("PK", $colonne)) {
 //            if (array_key_exists("nonNull", $colonne)) {
@@ -92,14 +96,14 @@ function tBD2Str($ptSQLTable, $ptableName) {
             $contenuDAO.="?, ";
         }
     }
-    
+
     // je me suis arreté là pour l'integration du DTO dans le DAO
     $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . ")\";\n";
     $contenuDAO.='$lrs = $this->cnx->prepare($querySQL);' . "\n";
     $contenuDAO.='$lrs->execute(array(';
     foreach ($ptSQLTable as $colonne) {
         if (!array_key_exists("PK", $colonne)) {
-            $contenuDAO.='$p' . $colonne["nomTable"] . ", ";
+            $contenuDAO.= '$p' . StringConversion::camelConversion($ptableName) . "->get" . StringConversion::camelConversion($colonne["nomTable"]) . "(), "; //'$p' . $colonne["nomTable"] . ", ";
         }
     }
     $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . "));\n";
@@ -111,15 +115,15 @@ function tBD2Str($ptSQLTable, $ptableName) {
     /**
      * update
      */
-    $contenuDAO.=" public function update" . $ptableName . "(";
-    foreach ($ptSQLTable as $colonne) {
-        if (array_key_exists("nonNull", $colonne)) {
-            $contenuDAO.='$p' . $colonne["nomTable"] . ", ";
-        } else {
-            $contenuDAO.='$p' . $colonne["nomTable"] . "=null , ";
-        }
-    }
-    $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . "){\n";
+    $contenuDAO.=" public function update(" . StringConversion::camelConversion($ptableName) . ' $p' . StringConversion::camelConversion($ptableName) . ") {";
+//    foreach ($ptSQLTable as $colonne) {
+//        if (array_key_exists("nonNull", $colonne)) {
+//            $contenuDAO.='$p' . $colonne["nomTable"] . ", ";
+//        } else {
+//            $contenuDAO.='$p' . $colonne["nomTable"] . "=null , ";
+//        }
+//    }
+//    $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . "){\n";
     $contenuDAO.="try {\n";
     $contenuDAO.='$iAffect = 0;' . "\n";
     $contenuDAO.='$querySQL' . "=\"UPDATE $ptableName SET ";
@@ -133,10 +137,10 @@ function tBD2Str($ptSQLTable, $ptableName) {
     $contenuDAO.='$lrs->execute(array(';
     foreach ($ptSQLTable as $colonne) {
         if (!array_key_exists("PK", $colonne)) {
-            $contenuDAO.='$p' . $colonne["nomTable"] . ", ";
+            $contenuDAO.= '$p' .StringConversion::camelConversion($ptableName) . "->" . StringConversion::camelConversion("get".$colonne["nomTable"]) . "(), "; // $contenuDAO.='$p' . $colonne["nomTable"] . ", ";
         }
     }
-    $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . ', $p' . $colonnePKName . " ));\n";
+    $contenuDAO = substr($contenuDAO, 0, strlen($contenuDAO) - 2) . ', $p' . StringConversion::camelConversion($colonnePKName) . " ));\n";
     $contenuDAO.='$iAffect = $lrs->rowcount();' . "\n";
     $contenuDAO.='} catch (Exception $ex) {' . "\n";
     $contenuDAO.=' $iAffect = -1;' . "\n";
@@ -145,7 +149,7 @@ function tBD2Str($ptSQLTable, $ptableName) {
     /**
      * delete
      */
-    $contenuDAO.="public function delete$ptableName(" . '$p' . $colonnePKName . ") {\n ";
+    $contenuDAO.="public function delete(" . '$p' . $colonnePKName . ") {\n ";
     $contenuDAO.="try {\n";
     $contenuDAO.='$iAffect = 0;' . "\n";
     $contenuDAO.='$querySQL' . " = \"DELETE FROM " . $ptableName . " WHERE $colonnePKName = ?\";\n";
