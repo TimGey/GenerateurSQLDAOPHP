@@ -14,9 +14,9 @@ function tBD2Str($ptSQLTable, $ptableName) {
 
     $colonnePKName = "";
 
-    $contenuDAO = "// import dto à ajouté \n";
-    $contenuDAO .= "<?php \n";
-    $contenuDAO.= " \nclass " . StringConversion::camelConversion($ptableName) . "DAO {\n \n " . '  private $cnx' . ";\n";
+    $contenuDAO = "<?php \n";
+    $contenuDAO .= "// import dto à ajouté \n";
+    $contenuDAO.= " \nclass " . StringConversion::converSionNomDeClass($ptableName) . "DAO {\n \n " . '  private $cnx' . ";\n";
     $contenuDAO.='public function __construct(PDO $pcnx) {' . "\n";
     $contenuDAO.= '$this->cnx = $pcnx;' . "\n";
     $contenuDAO.="}\n \n ";
@@ -32,7 +32,7 @@ function tBD2Str($ptSQLTable, $ptableName) {
     $contenuDAO.='$List = $lrs->fetchAll()' . ";\n";
     $contenuDAO.='$tdto = array();';
     $contenuDAO.='foreach ($List as $ligne) {' . "\n";
-    $contenuDAO.='$dto = new' . $ptableName . '('; //$ligne["idAbonnement"], $ligne["dateAbonnement"], $ligne["duree"], $ligne["idLecteur"]);' . "\n";
+    $contenuDAO.='$dto = new ' . StringConversion::converSionNomDeClass($ptableName) . '(';
     foreach ($ptSQLTable as $colonne) {
         $contenuDAO.='$ligne [' . "\"" . $colonne["nomTable"] . "\"] ,";
     }
@@ -71,7 +71,7 @@ function tBD2Str($ptSQLTable, $ptableName) {
     /**
      * insert
      */
-    $contenuDAO.=" public function insert(" . StringConversion::camelConversion($ptableName) . '$p' . StringConversion::camelConversion($ptableName) . ") {\n";
+    $contenuDAO.=" public function insert(" . StringConversion::converSionNomDeClass($ptableName) . ' $p' . StringConversion::camelConversion($ptableName) . ") {\n";
 
     $contenuDAO.="try {\n";
     $contenuDAO.='$iAffect = 0;' . "\n";
