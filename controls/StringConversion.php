@@ -39,7 +39,7 @@ class StringConversion {
         $word = strtoupper($strg[0]);
         $symbol = false;
 
-        for ($i = 0; $i < strlen($strg); $i++) {
+        for ($i = 1; $i < strlen($strg); $i++) {
             $letter = $strg[$i];
 
             if ($letter == "_" || $letter == "-") {
