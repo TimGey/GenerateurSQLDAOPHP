@@ -10,18 +10,18 @@ function formToSession($pServeur, $pPort, $pUt, $pMDP) {
     $_SESSION["port"] = $pPort;
     $_SESSION["ut"] = $pUt;
     $_SESSION["mdp"] = $pMDP;
-    
+
     $pdo = seConnecter($pServeur, $pPort, $pUt, $pMDP, "");
     return $pdo;
 }
 
 function generateList($pPdo) {
-    
+
     $tDBName = getBDsFromServeur($pPdo);
     $lsDBName = "";
-    foreach ($tDBName as $value){
-        if ($value!="information_schema"&&$value!="mysql"&&$value!="performance_schema"&&$value!="sys"&&$value!="cdcol"&&$value!="phpmyadmin"&&$value!="test")
-        $lsDBName .= "<li><a href='index.php?dbName=$value'>$value</a></li>\n";
+    foreach ($tDBName as $value) {
+        if ($value != "information_schema" && $value != "mysql" && $value != "performance_schema" && $value != "sys" && $value != "cdcol" && $value != "phpmyadmin" && $value != "test")
+            $lsDBName .= "<li><a href='index.php?dbName=$value'>$value</a></li>\n";
     }
     return $lsDBName;
 }
