@@ -11,7 +11,7 @@
  */
 function str2FilePhp($pstr, $ptableName){
     
-   $int= file_put_contents("./conf/".$ptableName."DAO.php", $pstr);
+   $int= file_put_contents("./gen/".$ptableName."DAO.php", $pstr);
    
    return $int;
 }

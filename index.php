@@ -3,28 +3,54 @@
     <head>
         <meta charset="UTF-8">
         <title>Générateur de DAO</title>
+        <link rel="stylesheet" type="text/css" href="./css/bootstrapCss/bootstrap.css">
+        <link rel='stylesheet' type="text/css" href="lib/ui/jquery-ui.min.css">
     </head>
     <body>
-        <form method="post">
-            <label for="nomConnexion">Nom de la connexion :</label>
-            <input type="text" name="nomConnexion" value="nomConnexion" />
-            <br />
-            <label for="serveur">Serveur :</label>
-            <input type="text" name="serveur" value="localhost" />
-            <br />
-            <label for="port">Port :</label>
-            <input type="text" name="port" value="3306" />
-            <br />
-            <label for="username">Username :</label>
-            <input type="text" name="username" value="root" />
-            <br />
-            <label for="mdp">Mot de passe :</label>
-            <input type="text" name="mdp" value="" />
-            <br />
-            <button type="submit" value="1" name="btConnexion">Valider</button>
-        </form>
-        <div>
-            <ul>
+        <div class="row">
+            <form method="post" class="col-md-4">
+                <div class="form-group">
+
+                    <div class="form-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Nom de la connexion :</span>
+                        </div>
+                        <input class="form-control" aria-label="Small"  type="text" name="nomConnexion" value="nomConnexion" />
+                    </div>
+
+                    <div class="form-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Serveur :</span>
+                        </div>
+                        <input class="form-control" type="text" name="serveur" value="localhost" />
+                    </div>
+
+                    <div class="form-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Port :</span>
+                        </div>
+                        <input class="form-control" type="text" name="port" value="3306" />
+                    </div>
+
+                    <div class="form-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Username :</span>
+                        </div>
+                        <input class="form-control" type="text" name="username" value="root" />
+                    </div>
+
+                    <div class="form-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Mot de passe :</span>
+                        </div>
+                        <input class="form-control" type="text" name="mdp" value="" />
+                    </div>
+
+                    <button class="btn btn-primary btn-sm" type="submit" value="1" name="btConnexion">Valider</button>
+                </div>
+            </form>
+
+            <div class="col-4">
                 <?php
                 $cnx;
                 require_once 'controls/listDB.php';
@@ -61,8 +87,9 @@
                     print $lsContenu;
                 }
                 ?>
-            </ul>
+            </div>
         </div>
+
         <div>
             <form method="get">
 
@@ -107,5 +134,7 @@
 
             </form>
         </div>
+        <script src="lib/ui/external/jquery/jquery.js"></script>
+        <script src="lib/ui/jquery-ui.min.js"></script>
     </body>
 </html>

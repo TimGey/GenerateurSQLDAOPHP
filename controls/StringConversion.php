@@ -35,7 +35,7 @@ class StringConversion {
      * @param type $strg
      * @return type
      */
-    public function converSionNomDeClass($strg) {
+    public static function converSionNomDeClass($strg) {
         $word = strtoupper($strg[0]);
         $symbol = false;
 

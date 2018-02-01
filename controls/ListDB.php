@@ -18,11 +18,13 @@ function formToSession($pServeur, $pPort, $pUt, $pMDP) {
 function generateList($pPdo) {
 
     $tDBName = getBDsFromServeur($pPdo);
-    $lsDBName = "";
+    $lsDBName = "<div class=\"list-group\">\n";
     foreach ($tDBName as $value) {
         if ($value != "information_schema" && $value != "mysql" && $value != "performance_schema" && $value != "sys" && $value != "cdcol" && $value != "phpmyadmin" && $value != "test")
-            $lsDBName .= "<li><a href='index.php?dbName=$value'>$value</a></li>\n";
+            $lsDBName .= "<a href='index.php?dbName=$value' class=\"list-group-item list-group-item-action\">$value</a>\n";
     }
+    $lsDBName .= "</div>";
+
     return $lsDBName;
 }
 
