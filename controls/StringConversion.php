@@ -19,7 +19,7 @@ class StringConversion {
             }
 
             if ($symbol) {
-                $letter = $strg[i];
+                $letter = $strg[$i];
                 $letter = strtoupper($letter);
                 $symbol = false;
                 $word .= $letter;

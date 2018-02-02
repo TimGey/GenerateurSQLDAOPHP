@@ -125,7 +125,7 @@
                     $int = str2FilePhp($strDAO, $table);
 
                     if ($int) {
-                        echo "<br/>Création d'un fichier $table" . "DAO.php dans le dossier \"conf\" ";
+                        echo "<br/>Création d'un fichier $table" . "DAO.php dans le dossier \"gen\" ";
                     } else {
                         echo "<br/>Création échouée";
                     }
